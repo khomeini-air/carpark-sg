@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  sg-carpark:
+    build: .
+    container_name: sg-carpark
+    ports:
+      - '8080:8080'
+    networks:
+      - network_1
+    depends_on:
+      - mysqldb
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/sg-carpark?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+
+  mysqldb:
+    image: mysql:8.0
+    hostname: mysqldb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sg-carpark
+    container_name: mysqldb
+    ports:
+        - '3306:3306'
+    networks:
+      - network_1
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+networks:
+  network_1: {}
+
+volumes:
+  mysql_data:
